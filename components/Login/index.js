@@ -24,7 +24,7 @@ class Login extends React.Component {
       <Typography variant="body2" color="textSecondary" align="center">
         {"Copyright © "}
         <Link color="inherit" href="#">
-          Rafiky
+          Rafiky Connect
         </Link>{" "}
         {new Date().getFullYear()}
       </Typography>
@@ -84,8 +84,8 @@ class Login extends React.Component {
               <img
                 className={classes.avatar}
                 height="40px"
-                width="40px"
-                src="/static/Rafiky 3-01.png"
+                width="60px"
+                src="/static/portale.png"
                 alt="my image"
               />
               <Typography component="h1" variant="h5">
@@ -142,7 +142,7 @@ class Login extends React.Component {
                   variant="contained"
                   color="primary"
                   classes={{
-                    root: classes.submit, // class name, e.g. `classes-nesting-root-x`
+                    root: classes.submit
                   }}
                 >
                   LOGIN

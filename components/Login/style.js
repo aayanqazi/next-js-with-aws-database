@@ -6,10 +6,10 @@ const styles = {
     height: "100vh"
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage: "url(/static/shutterstock_92526319.jpg)",
     backgroundRepeat: "no-repeat",
     backgroundSize: "cover",
-    backgroundPosition: "center"
+    backgroundPosition: "100% center"
   },
   paper: {
     margin: "64px 32px",
@@ -19,7 +19,7 @@ const styles = {
   },
   avatar: {
     margin: 8,
-    width: 40,
+    width: 60,
     height: 40
   },
   form: {
@@ -29,9 +29,9 @@ const styles = {
   submit: {
     margin: "24px 0px 16px",
     borderRadius: 25,
-    backgroundColor: "#57b845",
+    backgroundColor: "#561bbe",
     "&:hover":{
-        background: "rgba(87, 184, 69, 0.7)"
+        background: "rgba(86, 27, 190, 0.7)"
     }
   },
   input: {
