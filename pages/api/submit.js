@@ -1,12 +1,12 @@
 import nextConnect from "next-connect";
 import connect from "../../config/database";
-import User from "../../model/user";
 
 const handler = nextConnect();
 
 // handler.use(middleware);
 
-handler.post(async (req, res) => {
+handler.get(async (req, res) => {
+  res.json("Data Saved!");
   // let user = new User(req.body);
   // await user.save((err, book) => {
   //   if (err) res.json(err);
@@ -14,4 +14,4 @@ handler.post(async (req, res) => {
   // });
 });
 
-export default handler;
+export default connect(handler);
