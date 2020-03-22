@@ -12,6 +12,8 @@ import Styles, { CustomTextField } from "./style";
 import axios from "axios";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import MailIcon from "@material-ui/icons/Mail";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 class Login extends React.Component {
   state = {
@@ -39,26 +41,34 @@ class Login extends React.Component {
 
   onSubmit = e => {
     e.preventDefault();
+    this.setState({
+      loading: true
+    });
     if (this.state.email && this.state.password) {
-      //   axios
-      //     .post("api/users/login", {
-      //       password: this.state.password,
-      //       email: this.state.email
-      //     })
-      //     .then(val => {
-      //       localStorage.setItem("token", val.headers["x-auth-token"]);
-      //       if (val.data && !val.data.privacy_approval) {
-      //         this.toggle(val.data);
-      //       } else {
-      //         localStorage.setItem("user", JSON.stringify(val.data));
-      //         this.props.history.push("/");
-      //       }
-      //     })
-      //     .catch(err => {
-      //       if (err.response && err.response.data) {
-      //         alert(err.response.data);
-      //       }
-      //     });
+      axios
+        .post("/api/login", {
+          password: this.state.password,
+          username: this.state.email
+        })
+        .then(val => {
+          console.log(val);
+          localStorage.setItem("token", val.data.token);
+          this.setState({
+            loading: false
+          });
+        })
+        .catch(err => {
+          if (err.response && err.response.data) {
+            this.setState(
+              {
+                loading: false
+              },
+              () => {
+                alert(err.response.data?.message);
+              }
+            );
+          }
+        });
     } else {
       alert("Please fill complete form");
     }
@@ -68,6 +78,10 @@ class Login extends React.Component {
     const { classes } = this.props;
     return (
       <div>
+        <Backdrop className={classes.backdrop} open={this.state.loading}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+
         <Grid container component="main" className={classes.root}>
           <CssBaseline />
           <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -119,6 +133,7 @@ class Login extends React.Component {
                 <CustomTextField
                   variant="outlined"
                   margin="normal"
+                  required
                   required
                   fullWidth
                   name="password"

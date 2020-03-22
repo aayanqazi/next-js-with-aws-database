@@ -1,25 +1,23 @@
-var mysql = require("mysql");
+const mysql = require("serverless-mysql");
 
 require("dotenv").config();
 
-const withConnect = handler => async (req, res) => {
-  var connection = await mysql.createConnection({
+const db = mysql({
+  config: {
     host: process.env.RDS_HOSTNAME,
     user: process.env.RDS_USERNAME,
     password: process.env.RDS_PASSWORD,
-    port: process.env.RDS_PORT
-  });
-  connection.connect(function(err) {
-    if (err) {
-      console.error("Database connection failed: " + err.stack);
-      return;
-    }
+    port: process.env.RDS_PORT,
+    database: process.env.MYSQL_DATABASE,
+  }
+});
 
-    console.log("Connected to database.");
-  });
-  connection.end();
-
-  return handler(req, res);
+exports.query = async query => {
+  try {
+    const results = await db.query(query);
+    await db.end();
+    return results;
+  } catch (error) {
+    return { error };
+  }
 };
-
-export default withConnect;

@@ -1,7 +1,7 @@
 import { withStyles } from "@material-ui/styles";
 import TextField from "@material-ui/core/TextField";
 
-const styles = {
+const styles = (theme) => ({
   root: {
     height: "100vh"
   },
@@ -16,6 +16,10 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
+  },
+  backdrop: {
+    zIndex: 2000+ "!important",
+    color: '#fff',
   },
   avatar: {
     margin: 8,
@@ -37,7 +41,7 @@ const styles = {
   input: {
     borderRadius: 25,
   }
-};
+});
 
 export const CustomTextField = withStyles({
   root: {

@@ -16,13 +16,17 @@
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
     "dotenv": "^8.2.0",
     "formik": "^2.1.4",
+    "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "next": "^9.3.1",
     "next-connect": "^0.6.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "serverless-mysql": "^1.5.3",
+    "sql-template-strings": "^2.2.2",
     "yup": "^0.28.3"
   },
   "engines": {
