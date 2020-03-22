@@ -14,6 +14,7 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import MailIcon from "@material-ui/icons/Mail";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Router from "next/router";
 
 class Login extends React.Component {
   state = {
@@ -53,6 +54,7 @@ class Login extends React.Component {
         .then(val => {
           console.log(val);
           localStorage.setItem("token", val.data.token);
+          window.location.href = "/";
           this.setState({
             loading: false
           });
