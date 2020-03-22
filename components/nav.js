@@ -15,13 +15,17 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1
   },
   appBar: {
-    backgroundColor: "#561bbe"
+    backgroundColor: "#561bbe",
+    height: 40
   },
   menuButton: {
     marginRight: theme.spacing(2)
   },
   title: {
     flexGrow: 1
+  },
+  toolbar:{
+    minHeight: 10
   }
 }));
 
@@ -45,16 +49,12 @@ export default function ButtonAppBar() {
           margin: 0;
         }
       `}</style>
-      <AppBar className={classes.appBar} position="static">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
+      <AppBar classes={{
+        root: classes.appBar
+      }} position="static">
+        <Toolbar classes={{
+          root: classes.toolbar
+        }}>
           <Typography variant="h6" className={classes.title}>
             Rafiky Dashboard
           </Typography>

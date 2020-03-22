@@ -52,7 +52,6 @@ class Login extends React.Component {
           username: this.state.email
         })
         .then(val => {
-          console.log(val);
           localStorage.setItem("token", val.data.token);
           window.location.href = "/";
           this.setState({
@@ -104,9 +103,6 @@ class Login extends React.Component {
                 src="/static/portale.png"
                 alt="my image"
               />
-              <Typography component="h1" variant="h5">
-                Member Login
-              </Typography>
               <form
                 onSubmit={this.onSubmit}
                 className={classes.form}

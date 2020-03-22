@@ -12,7 +12,7 @@ const styles = (theme) => ({
     backgroundPosition: "100% center"
   },
   paper: {
-    margin: "64px 32px",
+    margin: "35% 32px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center"
