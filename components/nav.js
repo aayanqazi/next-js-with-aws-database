@@ -56,7 +56,6 @@ export default function ButtonAppBar() {
           root: classes.toolbar
         }}>
           <Typography variant="h6" className={classes.title}>
-            Rafiky Dashboard
           </Typography>
           <div>
             <IconButton
