@@ -12,7 +12,9 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-        </Head>
+          <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/bootstrap.css" />
+          <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/react-select.css" />        </Head>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <body>
           <Main />
           <NextScript />

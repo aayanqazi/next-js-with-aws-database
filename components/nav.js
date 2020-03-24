@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   title: {
     flexGrow: 1
   },
-  toolbar:{
+  toolbar: {
     minHeight: 10
   }
 }));
@@ -47,6 +47,14 @@ export default function ButtonAppBar() {
       <style jsx global>{`
         body {
           margin: 0;
+        }
+        #zmmtg-root {
+          width: 50% !important;
+          height: 50% !important;
+          position: relative !important;
+          background-color: black !important;
+          margin-top: 20px;
+          margin-left: 20px;
         }
       `}</style>
       <AppBar classes={{

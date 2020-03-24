@@ -15,6 +15,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
+    "@zoomus/websdk": "^1.7.2",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "dotenv": "^8.2.0",
