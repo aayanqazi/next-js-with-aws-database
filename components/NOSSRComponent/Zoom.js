@@ -1,6 +1,5 @@
 import { ZoomMtg } from "@zoomus/websdk";
 import { useEffect } from "react";
-require("dotenv").config();
 
 const Zoom = () => {
 
@@ -10,48 +9,57 @@ const Zoom = () => {
     ZoomMtg.prepareJssdk();
 
     const meetConfig = {
-      apiKey: process.env.API_KEY,
-      apiSecret: process.env.API_SECRET,
-      meetingNumber: "847304408",
-      userName: "Admin",
-      passWord: '956012',
-      leaveUrl: 'http://zoom.us/',
+      apiKey: "",
+      apiSecret: "",
+      meetingNumber: "",
+      userName: localStorage.getItem("username") || "admin",
+      passWord: "",
+      leaveUrl: 'https://rafiky.net',
       role: 0
     };
-    const signature = ZoomMtg.generateSignature({
+    console.log(process.env)
+    ZoomMtg.generateSignature({
       meetingNumber: meetConfig.meetingNumber,
       apiKey: meetConfig.apiKey,
       apiSecret: meetConfig.apiSecret,
       role: meetConfig.role,
-      success: function (res) {
-        console.log(res.result);
-      }
-    });
-
-    ZoomMtg.init({
-      leaveUrl: '/',
-      isSupportAV: true,
-      success: function () {
-        ZoomMtg.join(
-          {
-            meetingNumber: meetConfig.meetingNumber,
-            userName: meetConfig.userName,
-            signature: signature,
-            apiKey: meetConfig.apiKey,
-            userEmail: 'email@gmail.com',
-            passWord: meetConfig.passWord,
-            success: function (res) {
-              $('#nav-tool').hide();
-              console.log('join meeting success');
-            },
-            error: function (res) {
-              console.log(res);
-            }
+      success(res) {
+        ZoomMtg.init({
+          leaveUrl: meetConfig.leaveUrl,
+          showMeetingHeader: true,
+          isSupportAV: true,
+          isSupportChat: false,
+          disableInvite: true,
+          isLockBottom: false,
+          isSupportQA: false,
+          isSupportCC: false,
+          screenShare: false,
+          videoHeader: false,
+          isLockBottom: false,
+          isSupportNonverbal: false,
+          success() {
+            ZoomMtg.join(
+              {
+                meetingNumber: meetConfig.meetingNumber,
+                userName: meetConfig.userName,
+                signature: res.result,
+                apiKey: meetConfig.apiKey,
+                userEmail: 'info@rafiky.net',
+                passWord: meetConfig.passWord,
+                success() {
+                  $('#nav-tool').hide();
+                  console.log('join meeting success');
+                },
+                error(res) {
+                  console.log(res);
+                }
+              }
+            );
+          },
+          error(res) {
+            console.log(res);
           }
-        );
-      },
-      error: function (res) {
-        console.log(res);
+        });
       }
     });
   }, [])

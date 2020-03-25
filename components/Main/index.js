@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Nav from "../nav";
-import { Typography } from "@material-ui/core";
 import dynamic from 'next/dynamic';
 
 
@@ -12,8 +11,6 @@ const Zoom = dynamic(
 )
 
 const Main = () => {
-  useEffect(() => {
-  }, [])
   return (
     <div>
       <Nav />

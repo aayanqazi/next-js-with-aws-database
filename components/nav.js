@@ -49,12 +49,49 @@ export default function ButtonAppBar() {
           margin: 0;
         }
         #zmmtg-root {
-          width: 50% !important;
-          height: 50% !important;
-          position: relative !important;
-          background-color: black !important;
           margin-top: 20px;
           margin-left: 20px;
+        }
+        #zmmtg-root,#wc-loading, .meeting-client, .meeting-client-inner, .meeting-app {
+          width: 800px !important;
+          height: 400px !important;
+          position: relative !important;
+        }
+        .loading-layer{
+          display: none !important;
+        }
+        #wc-footer {
+          width: 800px !important;
+        }
+
+        #wc-container-right{
+          position: absolute !important;
+          left: 0 !important;
+          z-index: 1000000 !important;
+          top: 0 !important;
+          height: 60% !important;
+        }
+        .participant-scrollbar{
+          height: 100% !important;
+        }
+        #wc-container-left{
+        }
+
+        #wc-content{
+          display: flex !important;
+        }
+        
+        #dialog-join {
+          width: 800px !important;
+        }
+        
+        #sv-active-video, .active-main, #sv-active-speaker-view, .main-layout {
+          height: 400px !important;
+          width: 800px !important;
+        }
+        
+        .suspension-window {
+          transform: translate(-570px, 30px) !important;
         }
       `}</style>
       <AppBar classes={{
