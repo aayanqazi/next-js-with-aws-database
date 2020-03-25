@@ -9,11 +9,11 @@ const Zoom = () => {
     ZoomMtg.prepareJssdk();
 
     const meetConfig = {
-      apiKey: "",
-      apiSecret: "",
-      meetingNumber: "",
+      apiKey: "", // here you need to add zoom api key
+      apiSecret: "", // here you need to add zoom api secret key
+      meetingNumber: "", //here you need to add meetingId
       userName: localStorage.getItem("username") || "admin",
-      passWord: "",
+      passWord: "", //here you need to add meeting password
       leaveUrl: 'https://rafiky.net',
       role: 0
     };
