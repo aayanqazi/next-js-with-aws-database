@@ -17,7 +17,6 @@ const Zoom = () => {
       leaveUrl: 'https://rafiky.net',
       role: 0
     };
-    console.log(process.env)
     ZoomMtg.generateSignature({
       meetingNumber: meetConfig.meetingNumber,
       apiKey: meetConfig.apiKey,
