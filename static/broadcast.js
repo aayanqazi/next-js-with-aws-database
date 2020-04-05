@@ -5,21 +5,22 @@ var broadcast = function (config) {
     channels = '--',
     isbroadcaster,
     isGetNewRoom = true,
-    publicSocket = {};
+    participants = 1,
+    defaultSocket = {};
 
-  function openPublicSocket(callback) {
-    publicSocket = config.openSocket({
-      onmessage: onPublicSocketResponse,
+  function openDefaultSocket(callback) {
+    defaultSocket = config.openSocket({
+      onmessage: onDefaultSocketResponse,
       callback: function (socket) {
-        publicSocket = socket;
+        defaultSocket = socket;
         callback();
       }
     });
   }
 
-  function onPublicSocketResponse(response) {
-    console.log("Dataaa",response)
+  function onDefaultSocketResponse(response) {
     if (response.userToken == self.userToken) return;
+
     if (isGetNewRoom && response.roomToken && response.broadcaster) config.onRoomFound(response);
 
     if (response.userToken && response.joinUser == self.userToken && response.participant && channels.indexOf(response.userToken) == -1) {
@@ -38,6 +39,7 @@ var broadcast = function (config) {
       channel: _config.channel,
       onmessage: socketResponse,
       onopen: function () {
+        console.log("ASdasdasd",isofferer && !peer)
         if (isofferer && !peer) initPeer();
       }
     };
@@ -45,16 +47,27 @@ var broadcast = function (config) {
     socketConfig.callback = function (_socket) {
       socket = _socket;
       this.onopen();
+
+      if (_config.callback) {
+        _config.callback();
+      }
     };
 
     var socket = config.openSocket(socketConfig),
       isofferer = _config.isofferer,
       gotstream,
-      audio = document.createElement('audio'),
+      htmlElement = document.createElement(self.isAudio ? 'audio' : 'video'),
       inner = {},
       peer;
 
     var peerConfig = {
+      constraints: {
+        mandatory: {
+          OfferToReceiveAudio: true,
+          OfferToReceiveVideo: true
+        },
+        optional: []
+      },
       attachStream: config.attachStream,
       onICE: function (candidate) {
         socket.send({
@@ -68,11 +81,26 @@ var broadcast = function (config) {
       onRemoteStream: function (stream) {
         if (!stream) return;
 
-        audio.srcObject = stream;
-        audio.play();
+        try {
+          htmlElement.setAttributeNode(document.createAttribute('autoplay'));
+          htmlElement.setAttributeNode(document.createAttribute('playsinline'));
+          htmlElement.setAttributeNode(document.createAttribute('controls'));
+        } catch (e) {
+          htmlElement.setAttribute('autoplay', true);
+          htmlElement.setAttribute('playsinline', true);
+          htmlElement.setAttribute('controls', true);
+        }
+
+        htmlElement.srcObject = stream;
 
         _config.stream = stream;
-        onRemoteStreamStartsFlowing();
+        if (self.isAudio) {
+          htmlElement.addEventListener('play', function () {
+            this.muted = false;
+            this.volume = 1;
+            afterRemoteStreamStartedFlowing();
+          }, false);
+        } else onRemoteStreamStartsFlowing();
       }
     };
 
@@ -83,34 +111,29 @@ var broadcast = function (config) {
         peerConfig.offerSDP = offerSDP;
         peerConfig.onAnswerSDP = sendsdp;
       }
-      /* OfferToReceiveVideo MUST be false for audio-only streaming */
-      peerConfig.constraints = {
-        optional: [],
-        mandatory: {
-          OfferToReceiveAudio: true,
-          OfferToReceiveVideo: false
-        }
-      };
 
       peer = RTCPeerConnection(peerConfig);
     }
 
     function onRemoteStreamStartsFlowing() {
-      audio.addEventListener('play', function () {
-        setTimeout(function () {
-          audio.muted = false;
-          audio.volume = 1;
+      console.log("afterRemoteStreamStartedFlowing")
+      if (navigator.userAgent.match(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile/i)) {
+        // if mobile device
+        return afterRemoteStreamStartedFlowing();
+      }
 
-          window.audio = audio;
+      if (!(htmlElement.readyState <= HTMLMediaElement.HAVE_CURRENT_DATA || htmlElement.paused || htmlElement.currentTime <= 0)) {
+        afterRemoteStreamStartedFlowing();
+      } else setTimeout(onRemoteStreamStartsFlowing, 50);
+    }
 
-          gotstream = true;
+    function afterRemoteStreamStartedFlowing() {
+      console.log("afterRemoteStreamStartedFlowing")
+      gotstream = true;
+      config.onRemoteStream(htmlElement);
 
-          config.onRemoteStream({
-            audio: audio,
-            stream: _config.stream
-          });
-        }, 3000);
-      }, false);
+      /* closing subsocket here on the offerer side */
+      if (_config.closeSocket) socket = null;
     }
 
     function sendsdp(sdp) {
@@ -176,23 +199,22 @@ var broadcast = function (config) {
       invokedOnce = true;
 
       inner.sdp = JSON.parse(inner.firstPart + inner.secondPart + inner.thirdPart);
-      if (isofferer) peer.addAnswerSDP(inner.sdp);
-      else initPeer(inner.sdp);
+      if (isofferer) {
+        peer.addAnswerSDP(inner.sdp);
+        if (config.onNewParticipant) config.onNewParticipant(participants++);
+      } else initPeer(inner.sdp);
     }
   }
 
   function startBroadcasting() {
-    publicSocket && publicSocket.send({
+    defaultSocket && defaultSocket.send({
       roomToken: self.roomToken,
       roomName: self.roomName,
-      broadcaster: self.userToken
+      broadcaster: self.userToken,
+      isAudio: self.isAudio
     });
     setTimeout(startBroadcasting, 3000);
   }
-
-  /*********************/
-  /* HELPERS */
-  /*********************/
 
   function uniqueToken() {
     var s4 = function () {
@@ -201,10 +223,11 @@ var broadcast = function (config) {
     return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
   }
 
-  openPublicSocket(config.onReady || function () { });
+  openDefaultSocket(config.onReady || function () { });
   return {
     createRoom: function (_config) {
       self.roomName = _config.roomName || 'Anonymous';
+      self.isAudio = _config.isAudio;
       self.roomToken = uniqueToken();
 
       isbroadcaster = true;
@@ -212,18 +235,19 @@ var broadcast = function (config) {
       startBroadcasting();
     },
     joinRoom: function (_config) {
-      console.log(_config)
       self.roomToken = _config.roomToken;
+      self.isAudio = _config.isAudio;
       isGetNewRoom = false;
-
+      console.log("Dataaa",_config)
       openSubSocket({
-        channel: self.userToken
-      });
-
-      publicSocket.send({
-        participant: true,
-        userToken: self.userToken,
-        joinUser: _config.joinUser
+        channel: self.userToken,
+        callback: function () {
+          defaultSocket.send({
+            participant: true,
+            userToken: self.userToken,
+            joinUser: _config.joinUser
+          });
+        }
       });
     }
   };

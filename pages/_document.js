@@ -14,19 +14,21 @@ export default class MyDocument extends Document {
           />
           <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/bootstrap.css" />
           <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.2/css/react-select.css" />        </Head>
+        <script src="https://www.webrtc-experiment.com/DetectRTC.js"></script>
+        <script src="https://cdn.webrtc-experiment.com/socket.io.js"> </script>
+        <script src="https://cdn.webrtc-experiment.com/IceServersHandler.js"></script>
+        <script src="https://cdn.webrtc-experiment.com/CodecsHandler.js"></script>
+        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+        <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
+        <script src="../static/broadcast.js"> </script>
+        <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
         <body>
           <Main />
           <NextScript />
-          <script src="https://www.webrtc-experiment.com/DetectRTC.js"></script>
           <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
           <script src="https://source.zoom.us/1.7.2/lib/vendor/redux.min.js"></script>
           <script src="https://source.zoom.us/1.7.2/lib/vendor/redux-thunk.min.js"></script>
           <script src="https://source.zoom.us/1.7.2/lib/vendor/lodash.min.js"></script>
-          <script src="https://cdn.webrtc-experiment.com/socket.io.js"> </script>
-          <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-          <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
-          <script src="../static/broadcast.js"> </script>
-          <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
         </body>
       </html>
     );

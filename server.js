@@ -63,7 +63,7 @@ function onNewNamespace(channel, sender) {
     socket.on('message', function (data) {
       console.log(data.sender == sender)
       if (data.sender !== sender) {
-        // if (!username) username = data.data.sender;
+        if (!username) username = data.data.sender;
         console.log("data", data)
         socket.broadcast.emit('message', data.data);
       }
@@ -93,7 +93,7 @@ nextApp.prepare().then(() => {
         },
         "secretToken"
       );
-      res.status(200).json({ token: token, success: true });
+      res.status(200).json({ token: token, success: true, role: users[0].role });
     } else {
       res
         .status(401)
