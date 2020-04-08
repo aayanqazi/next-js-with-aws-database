@@ -49,7 +49,7 @@ const Main = ({ classes }) => {
 
     const data = {
       openSocket: function (config) {
-        var SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? window?.location?.origin : "http://localhost:3000";
+        var SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? `${window?.location?.origin}/` : "http://localhost:3000/";
 
         config.channel = config.channel || "rafikyRadio9856";
         var sender = Math.round(Math.random() * 999999999) + 999999999;
