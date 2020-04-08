@@ -1,19 +1,21 @@
 import { ZoomMtg } from "@zoomus/websdk";
 import { useEffect } from "react";
+import getConfig from 'next/config'
 
 const Zoom = () => {
 
   useEffect(() => {
+    const { publicRuntimeConfig } = getConfig();
+
     ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareJssdk();
-
     const meetConfig = {
-      apiKey: "", // here you need to add zoom api key
-      apiSecret: "", // here you need to add zoom api secret key
-      meetingNumber: "", //here you need to add meetingId
+      apiKey: publicRuntimeConfig?.API_KEY || "", // here you need to add zoom api key
+      apiSecret: publicRuntimeConfig?.API_SECRET || "", // here you need to add zoom api secret key
+      meetingNumber: publicRuntimeConfig?.MEETING_NUMBER || "", //here you need to add meetingId
       userName: localStorage.getItem("username") || "admin",
-      passWord: "", //here you need to add meeting password
+      passWord: publicRuntimeConfig?.PASSWORD || "", //here you need to add meeting password
       leaveUrl: 'https://rafiky.net',
       role: 0
     };

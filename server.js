@@ -10,7 +10,8 @@ const db = require("./config/database");
 const escape = require("sql-template-strings");
 var jwt = require("jsonwebtoken");
 const dev = process.env.NODE_ENV !== 'production';
-const nextApp = next({ dev });
+const conf = require("./next.config");
+const nextApp = next({ dev, conf  });
 
 const nextHandler = nextApp.getRequestHandler();
 
@@ -103,9 +104,9 @@ nextApp.prepare().then(() => {
   app.get("*", (req, res) => {
     return nextHandler(req, res)
   })
-  server.listen(process.env.PORT || 9559, (err) => {
+  server.listen(process.env.PORT || 3000, (err) => {
     if (err) throw err;
-    console.log('Please open SSL URL: https://localhost:' + (process.env.PORT || 9559) + '/');
+    console.log('Please open SSL URL: https://localhost:' + (process.env.PORT || 3000) + '/');
 
   });
 })

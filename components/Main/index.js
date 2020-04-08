@@ -10,6 +10,7 @@ import StopIcon from '@material-ui/icons/Stop';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Dialog from "../Dialog/Dialog";
 import { renderToString } from "react-dom/server";
+import getConfig from 'next/config'
 
 const Zoom = dynamic(
   () => import('../NOSSRComponent/Zoom'),
@@ -44,9 +45,11 @@ const Main = ({ classes }) => {
   }
 
   useEffect(() => {
+    const { publicRuntimeConfig } = getConfig();
+
     const data = {
       openSocket: function (config) {
-        var SIGNALING_SERVER = 'http://192.168.1.101:9559/';
+        var SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? window?.location?.origin : "http://localhost:3000";
 
         config.channel = config.channel || "rafikyRadio9856";
         var sender = Math.round(Math.random() * 999999999) + 999999999;
