@@ -7,7 +7,7 @@ const Zoom = () => {
   useEffect(() => {
     const { publicRuntimeConfig } = getConfig();
 
-    ZoomMtg.setZoomJSLib('https://jssdk.zoomus.cn/1.7.2/lib', '/av');
+    ZoomMtg.setZoomJSLib('https://source.zoom.us/1.7.4/lib', '/av');
     ZoomMtg.preLoadWasm();
     ZoomMtg.prepareJssdk();
     const meetConfig = {
