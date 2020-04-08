@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js -p $PORT",
+    "start": "NODE_ENV=production node server.js -p $PORT",
     "heroku-postbuild": "npm run build"
   },
   "keywords": [],
@@ -34,13 +34,13 @@
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "sql-template-strings": "^2.2.2",
-    "yup": "^0.28.3"
+    "yup": "^0.28.3",
+    "cross-env": "^7.0.2"
   },
   "engines": {
     "node": "12.13.1"
   },
   "devDependencies": {
-    "cross-env": "^7.0.2",
     "dotenv-webpack": "^1.7.0"
   }
 }
