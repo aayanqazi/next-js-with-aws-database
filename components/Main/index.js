@@ -12,13 +12,6 @@ import Dialog from "../Dialog/Dialog";
 import { renderToString } from "react-dom/server";
 import getConfig from 'next/config'
 
-const Zoom = dynamic(
-  () => import('../NOSSRComponent/Zoom'),
-  {
-    ssr: false,
-  }
-)
-
 const Main = ({ classes }) => {
   const participant = useRef(null);
   const [config, setConfig] = useState({});
@@ -28,6 +21,7 @@ const Main = ({ classes }) => {
   const listen = useRef(null);
   const [open, setOpen] = React.useState(false);
   const [isFound, setFound] = useState("");
+  const [roomDetails, setRoomDetails] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -43,23 +37,24 @@ const Main = ({ classes }) => {
       audio.style[navigator.mozGetUserMedia ? 'transform' : '-webkit-transform'] = 'rotate(360deg)';
     }, 1000);
   }
+  const { publicRuntimeConfig } = getConfig();
+  const SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? `${window?.location?.origin}/` : "http://localhost:3000/";
+  const socket = io(SIGNALING_SERVER + config.channel);
 
   useEffect(() => {
-    const { publicRuntimeConfig } = getConfig();
-
     const data = {
       openSocket: function (config) {
-        var SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? `${window?.location?.origin}/` : "http://localhost:3000/";
-
-        config.channel = config.channel || "rafikyRadio9856";
+        const { publicRuntimeConfig } = getConfig();
+        const SIGNALING_SERVER = publicRuntimeConfig.NODE_ENV === "production" ? `${window?.location?.origin}/` : "http://localhost:3000/";
+        const socket = io(SIGNALING_SERVER + config.channel);
         var sender = Math.round(Math.random() * 999999999) + 999999999;
 
         io(SIGNALING_SERVER).emit('new-channel', {
           channel: config.channel,
           sender: sender
         });
+        config.channel = config.channel || "rafikyRadio9856";
 
-        var socket = io(SIGNALING_SERVER + config.channel);
         socket.channel = config.channel;
         socket.on('connect', function () {
           console.log("Connect")
@@ -80,6 +75,7 @@ const Main = ({ classes }) => {
         socket.on('message', config.onmessage);
       },
       onRemoteStream: function (htmlElement) {
+        console.log("YAHA PAR MASLA HY")
         listen.current.insertBefore(htmlElement, listen?.current.firstChild);
       },
 
@@ -99,6 +95,21 @@ const Main = ({ classes }) => {
       }
     }
     setConfig(data);
+    socket.on('message', (data) => {
+      console.log(data);
+      if (data?.isClose && localStorage.getItem('role').toString() === "participant") {
+        const li = document.getElementsByTagName("li");
+        [...li].map((val) => {
+          const broadcaster = val.getAttribute("data-broadcaster");
+          const roomToken = val.getAttribute("data-roomtoken");
+
+          if(broadcaster === data.broadcaster && roomToken === data.roomToken){
+            console.log(roomToken);
+            val.remove();
+          }
+        })
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -111,7 +122,7 @@ const Main = ({ classes }) => {
   const captureUserMedia = (callback) => {
     var audio = document.createElement('audio');
     audio.setAttribute('autoplay', true);
-    audio.setAttribute('controls', true);
+    audio.setAttribute('controls', false);
 
     audio.muted = true;
     audio.volume = 0;
@@ -150,10 +161,22 @@ const Main = ({ classes }) => {
         broadcastUI.createRoom({
           roomName: value || 'Anonymous',
           isAudio: true
+        }, (value) => {
+          setRoomDetails(value)
         });
       });
     })
     handleClose();
+  }
+
+  const stopBroadcast = () => {
+    const audio = document.getElementsByTagName("audio")[0];
+    if (audio) {
+      audio.srcObject.getTracks()[0].stop();
+      broadcastUI.leaveRoom(roomDetails, socket);
+      audio.remove()
+      setBroadcastPlay(false)
+    }
   }
 
 
@@ -165,7 +188,7 @@ const Main = ({ classes }) => {
         <span style={{ fontSize: 14 }}>{`Channel: ${isFound.roomName}`}</span></>)
       roomsList.current.appendChild(li);
       li.setAttribute('data-broadcaster', isFound.broadcaster);
-      li.setAttribute('data-roomToken', isFound.broadcaster);
+      li.setAttribute('data-roomToken', isFound.roomToken);
       li.onclick = () => {
         li.disabled = true;
         var broadcaster = li.getAttribute('data-broadcaster');
@@ -185,11 +208,11 @@ const Main = ({ classes }) => {
       <Dialog setupNewBroadcast={setupNewBroadcast} open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} />
       <Grid container spacing={12}>
         <Grid item xs={8}>
-          <Zoom />
+          <iframe frameBorder="0" style={{ width: "90%", height: 450, marginTop: 20, marginLeft: 20 }} src="/zoom" />
         </Grid>
         <Grid style={{ position: "relative" }} item xs={4}>
           {!isParticipate ? <div className={classes.interpreter} >
-            {isBroadcastPlay ? <div className={classes.black}>
+            {isBroadcastPlay ? <div onClick={stopBroadcast} className={classes.black}>
               <StopIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />
             </div> : <div className={classes.micSection} onClick={handleClickOpen}>
                 <MicRoundedIcon style={{ color: "white", width: "1.9em", height: "1.9em" }} />

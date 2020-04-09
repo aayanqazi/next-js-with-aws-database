@@ -13,22 +13,23 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.4/css/bootstrap.css" />
-          <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.4/css/react-select.css" />        </Head>
+          <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.4/css/react-select.css" />
+          <script src="https://source.zoom.us/1.7.4/lib/vendor/jquery.min.js"></script>
+        <script src="https://source.zoom.us/1.7.4/lib/vendor/redux.min.js"></script>
+        <script src="https://source.zoom.us/1.7.4/lib/vendor/redux-thunk.min.js"></script>
+        <script src="https://source.zoom.us/1.7.4/lib/vendor/lodash.min.js"></script>
         <script src="https://www.webrtc-experiment.com/DetectRTC.js"></script>
         <script src="https://cdn.webrtc-experiment.com/socket.io.js"> </script>
         <script src="https://cdn.webrtc-experiment.com/IceServersHandler.js"></script>
         <script src="https://cdn.webrtc-experiment.com/CodecsHandler.js"></script>
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
-        <script src="../static/broadcast.js"> </script>
+        <script async src="/static/broadcast.js"> </script>
+        </Head>
         <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
         <body>
           <Main />
           <NextScript />
-          <script src="https://source.zoom.us/1.7.4/lib/vendor/jquery.min.js"></script>
-          <script src="https://source.zoom.us/1.7.4/lib/vendor/redux.min.js"></script>
-          <script src="https://source.zoom.us/1.7.4/lib/vendor/redux-thunk.min.js"></script>
-          <script src="https://source.zoom.us/1.7.4/lib/vendor/lodash.min.js"></script>
         </body>
       </html>
     );

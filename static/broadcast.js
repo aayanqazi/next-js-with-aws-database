@@ -1,12 +1,14 @@
 var broadcast = function (config) {
   var self = {
-    userToken: uniqueToken()
+    userToken: uniqueToken(),
+    roomName: null
   },
     channels = '--',
     isbroadcaster,
     isGetNewRoom = true,
     participants = 1,
     defaultSocket = {};
+  broadcastTime = ""
 
   function openDefaultSocket(callback) {
     defaultSocket = config.openSocket({
@@ -39,7 +41,7 @@ var broadcast = function (config) {
       channel: _config.channel,
       onmessage: socketResponse,
       onopen: function () {
-        console.log("ASdasdasd",isofferer && !peer)
+        console.log("ASdasdasd", isofferer && !peer)
         if (isofferer && !peer) initPeer();
       }
     };
@@ -56,15 +58,14 @@ var broadcast = function (config) {
     var socket = config.openSocket(socketConfig),
       isofferer = _config.isofferer,
       gotstream,
-      htmlElement = document.createElement(self.isAudio ? 'audio' : 'video'),
+      htmlElement = document.createElement('audio'),
       inner = {},
       peer;
-
+    console.log("DAYdasdasasdkasdhklasdjhasdkl", config.attachStream)
     var peerConfig = {
       constraints: {
         mandatory: {
-          OfferToReceiveAudio: true,
-          OfferToReceiveVideo: true
+          OfferToReceiveAudio: true
         },
         optional: []
       },
@@ -79,6 +80,7 @@ var broadcast = function (config) {
         });
       },
       onRemoteStream: function (stream) {
+        console.log("Daytaaaa")
         if (!stream) return;
 
         try {
@@ -206,14 +208,20 @@ var broadcast = function (config) {
     }
   }
 
-  function startBroadcasting() {
+  function startBroadcasting(_callback) {
     defaultSocket && defaultSocket.send({
       roomToken: self.roomToken,
       roomName: self.roomName,
       broadcaster: self.userToken,
       isAudio: self.isAudio
     });
-    setTimeout(startBroadcasting, 3000);
+    _callback && _callback({
+      roomToken: self.roomToken,
+      roomName: self.roomName,
+      broadcaster: self.userToken,
+      isAudio: self.isAudio
+    })
+    broadcastTime = setTimeout(startBroadcasting, 3000);
   }
 
   function uniqueToken() {
@@ -225,20 +233,31 @@ var broadcast = function (config) {
 
   openDefaultSocket(config.onReady || function () { });
   return {
-    createRoom: function (_config) {
+    createRoom: function (_config, callback) {
       self.roomName = _config.roomName || 'Anonymous';
       self.isAudio = _config.isAudio;
       self.roomToken = uniqueToken();
 
       isbroadcaster = true;
       isGetNewRoom = false;
-      startBroadcasting();
+      startBroadcasting(callback);
+    },
+    leaveRoom: function (roomDetails, sock) {
+      if (broadcastTime) {
+        clearTimeout(broadcastTime);
+        sock.emit("message", {
+          sender: "",
+          data: {
+            ...roomDetails,
+            isClose: true
+          }
+        })
+      }
     },
     joinRoom: function (_config) {
       self.roomToken = _config.roomToken;
       self.isAudio = _config.isAudio;
       isGetNewRoom = false;
-      console.log("Dataaa",_config)
       openSubSocket({
         channel: self.userToken,
         callback: function () {

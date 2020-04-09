@@ -4,6 +4,7 @@ module.exports = {
   devIndicators: {
     autoPrerender: false,
   },
+  transpileModules:["@zoomus/websdk"],
   publicRuntimeConfig: {
     API_KEY: process.env.API_KEY,
     API_SECRET: process.env.API_SECRET,
