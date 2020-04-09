@@ -14,6 +14,11 @@ export default class MyDocument extends Document {
           />
           <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.4/css/bootstrap.css" />
           <link type="text/css" rel="stylesheet" href="https://source.zoom.us/1.7.4/css/react-select.css" />
+        </Head>
+        <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
+        <body>
+          <Main />
+          <NextScript />
           <script src="https://source.zoom.us/1.7.4/lib/vendor/jquery.min.js"></script>
         <script src="https://source.zoom.us/1.7.4/lib/vendor/redux.min.js"></script>
         <script src="https://source.zoom.us/1.7.4/lib/vendor/redux-thunk.min.js"></script>
@@ -25,11 +30,6 @@ export default class MyDocument extends Document {
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
         <script src="https://www.webrtc-experiment.com/RTCPeerConnection-v1.5.js"> </script>
         <script async src="/static/broadcast.js"> </script>
-        </Head>
-        <script src="https://www.webrtc-experiment.com/commits.js" async> </script>
-        <body>
-          <Main />
-          <NextScript />
         </body>
       </html>
     );
