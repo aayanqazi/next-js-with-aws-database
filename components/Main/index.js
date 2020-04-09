@@ -11,6 +11,7 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Dialog from "../Dialog/Dialog";
 import { renderToString } from "react-dom/server";
 import getConfig from 'next/config'
+import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
 
 const Main = ({ classes }) => {
   const participant = useRef(null);
@@ -22,6 +23,7 @@ const Main = ({ classes }) => {
   const [open, setOpen] = React.useState(false);
   const [isFound, setFound] = useState("");
   const [roomDetails, setRoomDetails] = useState(null);
+  const [isPaused, setPaused] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -103,7 +105,7 @@ const Main = ({ classes }) => {
           const broadcaster = val.getAttribute("data-broadcaster");
           const roomToken = val.getAttribute("data-roomtoken");
 
-          if(broadcaster === data.broadcaster && roomToken === data.roomToken){
+          if (broadcaster === data.broadcaster && roomToken === data.roomToken) {
             console.log(roomToken);
             val.remove();
           }
@@ -201,7 +203,14 @@ const Main = ({ classes }) => {
     }
   }, [isFound]);
 
+  const mute = () => {
+    const audio = document.getElementsByTagName("audio")[0];
+    audio.srcObject.getTracks().forEach(t => t.enabled = !t.enabled);
+    setPaused(!isPaused)
+  };
+
   const isParticipate = localStorage.getItem('role').toString() === "participant";
+
   return (
     <div>
       <Nav />
@@ -212,9 +221,13 @@ const Main = ({ classes }) => {
         </Grid>
         <Grid style={{ position: "relative" }} item xs={4}>
           {!isParticipate ? <div className={classes.interpreter} >
-            {isBroadcastPlay ? <div onClick={stopBroadcast} className={classes.black}>
-              <StopIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />
-            </div> : <div className={classes.micSection} onClick={handleClickOpen}>
+            {isBroadcastPlay ? <div style={{ display: "flex" }}>
+              <div onClick={mute} className={classes.black} style={{ marginRight: 5 }}>
+                {isPaused ? <PlayCircleOutlineIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} /> : <PauseCircleOutlineIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />}
+              </div>
+              <div onClick={stopBroadcast} className={classes.black}>
+                <StopIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />
+              </div></div> : <div className={classes.micSection} onClick={handleClickOpen}>
                 <MicRoundedIcon style={{ color: "white", width: "1.9em", height: "1.9em" }} />
               </div>}
             <div ref={participant} id="participants"></div>
