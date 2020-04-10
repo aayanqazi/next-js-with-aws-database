@@ -11,7 +11,7 @@ import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import Dialog from "../Dialog/Dialog";
 import { renderToString } from "react-dom/server";
 import getConfig from 'next/config'
-import PauseCircleOutlineIcon from '@material-ui/icons/PauseCircleOutline';
+import MicOffIcon from '@material-ui/icons/MicOff';
 
 const Main = ({ classes }) => {
   const participant = useRef(null);
@@ -215,15 +215,15 @@ const Main = ({ classes }) => {
     <div>
       <Nav />
       <Dialog setupNewBroadcast={setupNewBroadcast} open={open} handleClickOpen={handleClickOpen} handleClose={handleClose} />
-      <Grid container spacing={12}>
+      <Grid style={{ background: "#20232a", height: "100vh", color: "white" }} container spacing={12}>
         <Grid item xs={8}>
           <iframe frameBorder="0" style={{ width: "90%", height: 450, marginTop: 20, marginLeft: 20 }} src="/zoom" />
         </Grid>
         <Grid style={{ position: "relative" }} item xs={4}>
           {!isParticipate ? <div className={classes.interpreter} >
-            {isBroadcastPlay ? <div style={{ display: "flex" }}>
+            {isBroadcastPlay ? <div style={{ display: "flex", marginBottom: 15 }}>
               <div onClick={mute} className={classes.black} style={{ marginRight: 5 }}>
-                {isPaused ? <PlayCircleOutlineIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} /> : <PauseCircleOutlineIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />}
+                {isPaused ? <PlayCircleOutlineIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} /> : <MicOffIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />}
               </div>
               <div onClick={stopBroadcast} className={classes.black}>
                 <StopIcon style={{ color: "white", width: "1.5em", height: "1.5em" }} />
